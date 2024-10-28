@@ -9,11 +9,11 @@ body {
   
   main {
     padding: 0;
-    margin-top: 40px;
+    margin-top: 50px;
   }
   
   h3 {
-    margin-top: 30px;
+    margin-top: 50px;
   }
   
   
@@ -29,7 +29,7 @@ body {
   form {
     margin: 10px auto;
     padding: 20px;
-    max-width: 600px;
+    max-width: 1000px;
   }
   
   label {
@@ -37,7 +37,7 @@ body {
   }
   
   input {
-    padding: 5px;
+    padding: 6px;
   }
   
   input[type='text'] {
