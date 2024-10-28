@@ -35,13 +35,9 @@ app.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
-// Your first API endpoint
-app.get('/api/hello', function(req, res) {
-  res.json({ greeting: 'hello API' });
-});
 
 // When trying to visit short_url
-app.get('/api/shorturl/:test', async function(req, res, next) {
+app.get('/api/:test', async function(req, res, next) {
   let short = await ogUrl.findOne({ short_url: req.params.test }).exec();
 
   console.log(short);
@@ -54,7 +50,7 @@ app.get('/api/shorturl/:test', async function(req, res, next) {
 });
 
 // Converts url to short_url(Number) and returns json
-app.post('/api/shorturl', async function(req, res, next) {
+app.post('/api', async function(req, res, next) {
 
   //console.log({ Url: req.body.url });
 
