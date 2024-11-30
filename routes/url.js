@@ -1,10 +1,11 @@
-require('dotenv').config();
-let express = require('express');
-let bodyParser = require('body-parser');
-let cors = require('cors');
-let app = express();
-const mongoose = require('mongoose');
+import 'dotenv/config';
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
+let router = express.Router();
 //Regex for http(s)://
 const regex = /^(http)[s]?(:\/\/)/;
 
@@ -23,25 +24,25 @@ console.log(mongoose.connection.readyState);
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+router.use(cors());
 
-app.use('/public', express.static(`${process.cwd()}/public`));
+router.use('/public', express.static(`${process.cwd()}/public`));
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
 // //console.log(req.body);
 
-app.get('/', function(req, res) {
+router.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
 // Your first API endpoint
-app.get('/api/hello', function(req, res) {
+router.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
 // When trying to visit short_url
-app.get('/api/shorturl/:test', async function(req, res, next) {
+router.get('/api/shorturl/:test', async function(req, res, next) {
   let short = await ogUrl.findOne({ short_url: req.params.test }).exec();
 
   console.log(short);
@@ -54,12 +55,19 @@ app.get('/api/shorturl/:test', async function(req, res, next) {
 });
 
 // Converts url to short_url(Number) and returns json
-app.post('/api/shorturl', async function(req, res, next) {
+router.post('/api/shorturl', async function(req, res, next) {
 
-  //console.log({ Url: req.body.url });
-
+  
   let currUrl = await ogUrl.findOne({ original_url: req.body.url }).exec(); //see if url is already in db
   const totalDocs = await ogUrl.countDocuments({});
+
+  const hash = await bcrypt.hash(req.body.url, 0);
+
+  console.log({ "Hash": hash });
+  console.log({ Url: req.body.url });
+  console.log({"Subhash": hash.substring(29, 36)});
+  
+  const hashStr = hash.substring(29, 36);
 
   if (!regex.test(req.body.url)) {
     res.send({ error: 'invalid url' });
@@ -72,7 +80,7 @@ app.post('/api/shorturl', async function(req, res, next) {
 
   } else {
     //let totalDocs = await ogUrl.countDocuments({});
-    const original = await ogUrl.create({ original_url: req.body.url, short_url: totalDocs });
+    await ogUrl.create({ original_url: req.body.url, short_url: hashStr });
 
     currUrl = await ogUrl.findOne({ original_url: req.body.url }).exec();
 
@@ -83,23 +91,14 @@ app.post('/api/shorturl', async function(req, res, next) {
 
   console.log({ "Current Obj": currUrl });
 
-  console.log({ "# of Docs": totalDocs });
-
-
+  //console.log({ "# of Docs": totalDocs });
   next();
 }, function(req, res) {
   if (!regex.test(req.body.url)) {
     res.send({ error: 'invalid url' });
   } else {
-    // res.send({ original_url: req.body.url, short_url: `${urlFunc(req.body.url)}`});
-    res.send({ original_url: req.originalUrl, short_url: Number(req.shortUrl) });
-
-    //res.send({ original_url: req.body.url, short_url: 1 }); // Test json
+    res.send({ original_url: req.originalUrl, short_url: req.shortUrl });
   }
 });
 
-
-
-app.listen(port, function() {
-  console.log(`Listening on port ${port}`);
-});
+export default router;
