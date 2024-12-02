@@ -1,5 +1,3 @@
-<<<<<<< HEAD:routes/url.js
-=======
 require('dotenv').config();
 let express = require('express');
 let bodyParser = require('body-parser');
@@ -105,4 +103,3 @@ app.post('/api/shorturl', async function(req, res, next) {
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
->>>>>>> parent of 69f30d6 (forgot what I changed tbh):index.js
