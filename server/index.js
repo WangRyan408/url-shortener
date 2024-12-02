@@ -1,9 +1,18 @@
-require('dotenv').config();
-let express = require('express');
-let bodyParser = require('body-parser');
-let cors = require('cors');
-let app = express();
-const mongoose = require('mongoose');
+import 'dotenv/config';
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import crypto from "crypto";
+import basex from 'base-x';
+
+const base62 = basex(
+  "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+);
+
+const URL_LENGTH = 6;
+
+const app = express();  
 
 //Regex for http(s)://
 const regex = /^(http)[s]?(:\/\/)/;
@@ -66,22 +75,24 @@ app.post('/api/shorturl', async function(req, res, next) {
   }
 
   if (currUrl != null) {
-
+    console.log(currUrl); 
     req.originalUrl = currUrl.original_url;
     req.shortUrl = currUrl.short_url;
 
   } else {
     //let totalDocs = await ogUrl.countDocuments({});
-    const original = await ogUrl.create({ original_url: req.body.url, short_url: totalDocs });
+    let shortHash = (base62.encode(crypto.createHash('sha256').update(req.body.url).digest()).slice(0, URL_LENGTH)).toString();
+    
+    await ogUrl.create({ original_url: req.body.url, short_url: shortHash });
 
     currUrl = await ogUrl.findOne({ original_url: req.body.url }).exec();
 
     req.originalUrl = currUrl.original_url;
     req.shortUrl = currUrl.short_url;
-
+    console.log(req.shortUrl);
   }
 
-  console.log({ "Current Obj": currUrl });
+  //    console.log({ "Current Obj": currUrl });
 
   console.log({ "# of Docs": totalDocs });
 
@@ -89,10 +100,10 @@ app.post('/api/shorturl', async function(req, res, next) {
   next();
 }, function(req, res) {
   if (!regex.test(req.body.url)) {
-    res.send({ error: 'invalid url' });
+    res.send({ error: 'invalid url' });   
   } else {
     // res.send({ original_url: req.body.url, short_url: `${urlFunc(req.body.url)}`});
-    res.send({ original_url: req.originalUrl, short_url: Number(req.shortUrl) });
+    res.send({ original_url: req.originalUrl, short_url: req.shortUrl  });
 
     //res.send({ original_url: req.body.url, short_url: 1 }); // Test json
   }
