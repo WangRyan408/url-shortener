@@ -1,14 +1,17 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
-import "dotenv/config";
+import dotenv from 'dotenv';
 import cors from 'cors';
 
+
 //Routes
-import urlRouter from './routes/url.js';
+import connectDB from './config/db.js';
+import urlRoutes from './routes/url.js';
+import authRoutes from './routes/auth.js';
 //import authRouter from './routes/auth.js';
 
-
+dotenv.config({path: '../.env'});
 const app = express();
 app.use(cors());
 
@@ -22,8 +25,15 @@ app .use('/public', express.static(`${process.cwd()}/public`));
 
 
 
-app.use('/', urlRouter);
-//app.use('/auth', authRouter);
+app.use('/api/url', urlRoutes);
+app.use('/api/auth', authRoutes);
+
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+connectDB();
 //app.use('/qrcode', qrcodeRouter);
 
 app.listen(port, function() {
