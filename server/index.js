@@ -24,7 +24,6 @@ app.use(bodyParser.json());
 app .use('/public', express.static(`${process.cwd()}/public`));
 
 
-
 app.use('/api/url', urlRoutes);
 app.use('/api/auth', authRoutes);
 

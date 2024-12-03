@@ -33,7 +33,7 @@ router.get('/user-urls', auth, async function(req, res) {
 
 // When trying to visit short_url
 router.get('/:shortUrl', async function(req, res, next) {
-  let short = await ogUrl.findOne({ short_url: req.params.test }).exec();
+  let short = await ogUrl.findOne({ short_url: req.params.shortUrl }).exec();
 
   console.log(short);
 
