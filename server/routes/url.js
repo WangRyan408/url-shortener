@@ -1,7 +1,5 @@
 import 'dotenv/config';
 import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
 import mongoose from 'mongoose';
 import crypto from "crypto";
 import basex from 'base-x';
@@ -30,8 +28,6 @@ console.log(mongoose.connection.readyState);
 
 
 // Basic Configuration
-const port = process.env.PORT || 3000;
-
 router.get('/', function(req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
@@ -67,7 +63,6 @@ router.post('/api/shorturl', async function(req, res, next) {
     req.shortUrl = currUrl.short_url;
 
   } else {
-    //let totalDocs = await ogUrl.countDocuments({});
     let shortHash = (base62.encode(crypto.createHash('sha256').update(req.body.url).digest()).slice(0, URL_LENGTH)).toString();
     
     await ogUrl.create({ original_url: req.body.url, short_url: shortHash });

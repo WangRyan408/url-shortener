@@ -3,7 +3,6 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import "dotenv/config";
 import cors from 'cors';
-import mongoose from 'mongoose';
 
 //Routes
 import urlRouter from './routes/url.js';
@@ -19,7 +18,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use('/public', express.static(`${process.cwd()}/public`));
+app .use('/public', express.static(`${process.cwd()}/public`));
 
 
 
