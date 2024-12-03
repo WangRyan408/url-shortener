@@ -1,0 +1,38 @@
+.navbar {
+    position: fixed; /* Makes the navbar fixed at the top */
+    top: 0; /* Positions it at the very top */
+    left: 0; /* Ensures it starts from the left edge */
+    width: 100%; /* Spans the entire width of the screen */
+    display: flex;
+    justify-content: center; /* Center the nav items */
+    gap: 300px; /* Add space between the links */
+    padding: 10px; /* Add padding to the navbar itself */
+     /* Optional background for contrast */
+  }
+  
+  .nav-link {
+    text-decoration: none;
+    color: #ffffff; /* Set the text color */
+    padding: 10px 20px; /* Add padding to make the links larger */
+    border: 1px solid #ddd; /* Add a subtle border */
+    border-radius: 5px; /* Slightly round the corners */
+    transition: all 0.3s ease; /* Smooth transition for hover effect */
+  }
+  
+  body {
+    margin: 0; /* Removes default margin */
+    background-image: url('background.jpg'); /* Path to your image file */
+    background-size: cover; /* Ensures the image covers the entire screen */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center; /* Centers the image */
+    font-family: Arial, sans-serif; /* Optional: Change the default font */
+  }
+  
+  
+
+  
+  .nav-link:hover {
+    background-color: #ddd; /* Highlight the link on hover */
+    color: #000; /* Change text color on hover */
+  }
+  
