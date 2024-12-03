@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/useAuth';
+import QRCode from 'react-qr-code';
 import user from '../../../server/models/user';
 
 export default function Dashboard() {
+  const [showQR, setShowQR] = useState(false);
+  const [qrValue, setQrValue] = useState('');
   const [urls, setUrls] = useState([]);
   const [newUrl, setNewUrl] = useState('');
   const { token, logout } = useAuth();
@@ -12,6 +15,11 @@ export default function Dashboard() {
 
   // Configure axios defaults
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  
+  const handleQRCode = (shortUrl) => {
+    setQrValue(`http://localhost:3000/api/url/${shortUrl}`);
+    setShowQR(true);
+  };
 
   const handleLogout = async () => {
     try {
@@ -120,33 +128,54 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {urls.map((url) => (
-              <tr key={url._id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {url.original_url}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-500">
-                  <a 
-                    href={`http://localhost:3000/api/url/${url.short_url}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline"
-                  >
-                    {url.short_url}
-                  </a>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <button
-                    onClick={() => deleteUrl(url.short_url)}
-                    className="text-red-600 hover:text-red-900"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            </tbody>
+        {urls.map((url) => (
+          <tr key={url._id}>
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              {url.original_url}
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-500">
+              <a 
+                href={`http://localhost:3000/${url.short_url}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
+                {url.short_url}
+              </a>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-sm flex space-x-4">
+              <button
+                onClick={() => handleQRCode(url.short_url)}
+                className="text-blue-600 hover:text-blue-900"
+              >
+                QR Code
+              </button>
+              <button
+                onClick={() => deleteUrl(url.short_url)}
+                className="text-red-600 hover:text-red-900"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
           </table>
+        </div>
+        )}
+        {showQR && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-xl">
+            <div className="flex flex-col items-center space-y-4">
+              <QRCode value={qrValue} size={256} />
+              <button
+                onClick={() => setShowQR(false)}
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
