@@ -55,6 +55,8 @@ export default function Dashboard() {
     }
   };
 
+
+
   const deleteUrl = async (shortUrl) => {
     try {
       await axios.delete(`http://localhost:3000/api/url/${shortUrl}`);
@@ -119,23 +121,30 @@ export default function Dashboard() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {urls.map((url) => (
-                <tr key={url._id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {url.original_url}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-500">
+              <tr key={url._id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {url.original_url}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-500">
+                  <a 
+                    href={`http://localhost:3000/api/url/${url.short_url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
                     {url.short_url}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <button
-                      onClick={() => deleteUrl(url.short_url)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                  </a>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <button
+                    onClick={() => deleteUrl(url.short_url)}
+                    className="text-red-600 hover:text-red-900"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
             </tbody>
           </table>
         </div>
