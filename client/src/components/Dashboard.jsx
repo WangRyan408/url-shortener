@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/useAuth';
 import QRCode from 'react-qr-code';
-import user from '../../../server/models/user';
 
 export default function Dashboard() {
   const [showQR, setShowQR] = useState(false);

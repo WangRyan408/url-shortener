@@ -1,7 +1,7 @@
 {
     "name": "shorturl",
     "version": "0.0.3",
-    "description": "URL Shortener Project ",
+    "description": "URL Shortener Project",
     "main": "index.js",
     "scripts": {
         "start": "node index.js",
