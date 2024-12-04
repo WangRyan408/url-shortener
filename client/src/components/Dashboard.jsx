@@ -135,7 +135,7 @@ export default function Dashboard() {
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-500">
               <a 
-                href={`http://localhost:3000/${url.short_url}`}
+                href={`http://localhost:3000/api/url/${url.short_url}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:underline"
