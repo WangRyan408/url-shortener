@@ -2,7 +2,8 @@
 
 ## Introduction
 Just a simple URL shortener. Nothing fancy in the way of functionality or design (and there are probably some implementation problems I'm new to this). Stores user data and URLs into MongoDB and has a simple dashboard to list shortened URLs. Enjoy playing around with it!
-(DISCLAIMER!!!!): There is NO reset password feature and there will not be one implemented!!!!! Try not to forget your info :)
+<br>
+__(DISCLAIMER!!!!): There is NO reset password feature and there will not be one implemented!!!!! Try not to forget your info :)__
 
 ## Dependencies
 - Node.js (v18+)
