@@ -37,7 +37,6 @@ Install npm dependencies
 ```
 //Run this command in both client and server directories
 npm install
-
 ```
 To start the client side, run
 ```
