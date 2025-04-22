@@ -75,6 +75,7 @@ router.post('/shorten', auth, async function(req, res) {
       });
     }
 
+    //I have no clue if this has the same entropy after slicing LMAO
     let shortHash = (base62.encode(crypto.createHash('sha256')
       .update(req.body.url)
       .digest())
