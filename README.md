@@ -55,9 +55,11 @@ _The User Dashboard_
 _Context Menu for the generated links_
 
 ![image](https://github.com/user-attachments/assets/38bd57fa-5d72-4c66-932d-ece5824b1c38)
+<br>
 _Sign in page_
 
 ![image](https://github.com/user-attachments/assets/a13ac401-2078-4ba7-94a1-381a30db60c9)
+<br>
 _Registration Page_
 
 
