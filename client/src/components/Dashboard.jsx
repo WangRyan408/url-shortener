@@ -9,11 +9,37 @@ export default function Dashboard() {
   const [qrValue, setQrValue] = useState('');
   const [urls, setUrls] = useState([]);
   const [newUrl, setNewUrl] = useState('');
+  const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [activeShortUrl, setActiveShortUrl] = useState('');
   const { token, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Configure axios defaults
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text)
+    .then(() => console.log('Copied!'))
+    .catch(err => console.error('Failed: ', err));
+
+    window.alert("Link Copied!");
+  };
+
+  const contextMenu = (e, shortUrl) => {
+    e.preventDefault();
+    setShowContextMenu(true);
+    setActiveShortUrl(shortUrl);
+    setContextMenuPos({ x: e.pageX, y: e.pageY });
+  };
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (showContextMenu) setShowContextMenu(false);
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showContextMenu]);
   
   const handleQRCode = (shortUrl) => {
     setQrValue(`http://localhost:3000/api/url/${shortUrl}`);
@@ -61,8 +87,6 @@ export default function Dashboard() {
       console.error('Error creating short URL:', error);
     }
   };
-
-
 
   const deleteUrl = async (shortUrl) => {
     try {
@@ -134,13 +158,14 @@ export default function Dashboard() {
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-500">
               <a 
-                href={`http://localhost:3000/api/url/${url.short_url}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
+                onClick={() => copyToClipboard(`http://localhost:3000/api/url/${url.short_url}`)}
+                onContextMenu={(e) => contextMenu(e, url.short_url)}
+                href="#"
+                className="hover:underline cursor-pointer"
               >
                 {url.short_url}
               </a>
+              
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-sm flex space-x-4">
               <button
@@ -175,6 +200,32 @@ export default function Dashboard() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+      
+      {showContextMenu && (
+        <div 
+          className="fixed bg-white shadow-lg rounded py-2 z-50"
+          style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
+        >
+          <a 
+            href={`http://localhost:3000/api/url/${activeShortUrl}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block px-4 py-2 hover:bg-gray-100"
+            onClick={() => setShowContextMenu(false)}
+          >
+            Open in new tab
+          </a>
+          <button
+            onClick={() => {
+              copyToClipboard(`http://localhost:3000/api/url/${activeShortUrl}`);
+              setShowContextMenu(false);
+            }}
+            className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+          >
+            Copy link
+          </button>
         </div>
       )}
     </div>
