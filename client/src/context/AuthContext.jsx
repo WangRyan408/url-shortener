@@ -2,6 +2,7 @@ import { createContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 
+
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {

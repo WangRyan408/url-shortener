@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import crypto from "crypto";
 import basex from 'base-x';
 import ogUrl from '../models/shorten.js'
-import auth from '../middleware/auth.js';
+import auth from '../middleware/authMiddleware.js';
 
 const base62 = basex(
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -32,7 +32,7 @@ router.get('/user-urls', auth, async function(req, res) {
 
 
 // When trying to visit short_url
-router.get('/:shortUrl', async function(req, res, next) {
+router.get('/:shortUrl', auth, async function(req, res, next) {
   let short = await ogUrl.findOne({ short_url: req.params.shortUrl }).exec();
 
   console.log(short);
@@ -44,7 +44,7 @@ router.get('/:shortUrl', async function(req, res, next) {
   res.redirect(`${req.shorty}`);
 });
 
-router.delete('/:shortUrl', async function(req, res) {
+router.delete('/:shortUrl', auth, async function(req, res) {
   try {
     const result = await ogUrl.findOneAndDelete({ short_url: req.params.shortUrl });
     if (!result) {
